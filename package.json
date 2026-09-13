@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
+    "build": "node generate-index.js && docusaurus build && rm -f static/blog-index.json",
     "start": "node generate-index.js && docusaurus start",
-    "build": "node generate-index.js && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
