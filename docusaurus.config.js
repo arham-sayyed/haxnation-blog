@@ -25,9 +25,22 @@ const config = {
 
   onBrokenLinks: 'throw',
 
+  // ── Analytics: Microsoft Clarity ─────────────────────────────────
+  // Proper Docusaurus way: declarative <head> tag (SPA-safe, no raw
+  // <script> paste into pages). Runs on every route, once per page load.
+  headTags: [
+    {
+      tagName: 'script',
+      attributes: { type: 'text/javascript' },
+      innerHTML:
+        '(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yhnl14eoha");',
+    },
+  ],
+
   // Docusaurus 3.10+ — moved from top-level onBrokenMarkdownLinks
   markdown: {
     format: 'md',
+    mermaid: true,
     hooks: {
       onBrokenMarkdownLinks: 'warn',
     },
@@ -100,8 +113,9 @@ const config = {
     ],
   ],
 
-  // ── Themes (local search) ─────────────────────────────────────────
+  // ── Themes (local search + mermaid diagrams) ─────────────────────
   themes: [
+    '@docusaurus/theme-mermaid',
     [
       '@easyops-cn/docusaurus-search-local',
       /** @type {import("@easyops-cn/docusaurus-search-local").PluginOptions} */
@@ -217,6 +231,11 @@ const config = {
           'bash', 'yaml', 'json', 'python', 'javascript',
           'typescript', 'rust', 'go', 'c', 'cpp',
         ],
+      },
+
+      // ── Mermaid diagrams ─────────────────────────────────────
+      mermaid: {
+        theme: { light: 'neutral', dark: 'forest' },
       },
 
       // ── Open Graph / SEO metadata ─────────────────────────────
