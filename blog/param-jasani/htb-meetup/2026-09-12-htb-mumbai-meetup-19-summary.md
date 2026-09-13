@@ -166,8 +166,9 @@ To visualize this, consider an application sending a print job:
 2. The operating system formats the request and passes it to the printer driver.
 3. The printer driver translates the abstract print command into hardware-specific commands understood by the printer's internal controller.
 
-> [!NOTE]
-> Because drivers reside in **Ring 0**, any vulnerability inside a driver runs with the full authority of the Windows kernel, completely bypassing user-mode restrictions.
+:::tip
+Because drivers reside in **Ring 0**, any vulnerability inside a driver runs with the full authority of the Windows kernel, completely bypassing user-mode restrictions.
+::: 
 
 ---
 
@@ -756,10 +757,14 @@ The same architectural flaws observed in automotive ecosystems—weak API authen
 
 ### Part 2: The Coffee Shop Attack Scenario & Physical UI Escape
 
-> [!NOTE]
-> **Engagement Scenario & Constraints:**
-> - **Environment:** An operator is seated in a ground-floor coffee shop/café shared with upper-floor corporate employees as an auxiliary break room.
-> - **Hardware Footprint:** Minimalist setup consisting solely of a standard laptop—no Software-Defined Radios (SDRs), high-gain directional antennas, or physical network taps.
+:::note
+
+**Engagement Scenario & Constraints:**
+> **Environment:** An operator is seated in a ground-floor coffee shop/café shared with upper-floor corporate employees as an auxiliary break room.
+
+
+> **Hardware Footprint:** Minimalist setup consisting solely of a standard laptop—no Software-Defined Radios (SDRs), high-gain directional antennas, or physical network taps.
+:::
 
 #### 1. Physical Footprint & UI Kiosk Escape
 To identify attack vectors without raising suspicion from café staff or patrons:
@@ -900,12 +905,13 @@ With 6 validated usernames and candidate passwords:
   - Enforced a 10-minute sleep interval between attempts with randomized jitter to stay beneath account lockout thresholds.
 - **Success:** Authenticated successfully into an active employee mailbox.
 
-> [!IMPORTANT]
-> **Target Authentication Status & Security Gaps:**
-> - **Target Environment:** Microsoft 365 Outlook Web Access (`https://mail.<target_domain>.com/owa/`)
-> - **Authentication Status:** Successful takeover of employee domain account.
-> - **Critical Vulnerability 1:** **No Multi-Factor Authentication (MFA)** was enforced for this account.
-> - **Critical Vulnerability 2:** Account status was marked **"Out of Office" (OOO / Vacation)**, minimizing risk of concurrent session alerts.
+:::note
+**Target Authentication Status & Security Gaps:**
+> **Target Environment:** Microsoft 365 Outlook Web Access (`https://mail.<target_domain>.com/owa/`)</br>
+> **Authentication Status:** Successful takeover of employee domain account.</br>
+> **Critical Vulnerability 1:** **No Multi-Factor Authentication (MFA)** was enforced for this account.</br>
+> **Critical Vulnerability 2:** Account status was marked **"Out of Office" (OOO / Vacation)**, minimizing risk of concurrent session alerts.
+:::
 
 #### Stealthy Email Reconnaissance
 To avoid triggering endpoint DLP or SOC file-download alerts:
