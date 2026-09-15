@@ -1,8 +1,8 @@
 ---
 title: "New feature additions to Haxnation Blogs Platform"
 description: "A feature update for Haxnation MDX blogs: interactive React demos, Mermaid diagrams, KaTeX formulas, image zoom, and global blog search."
-authors: [param-jasani]
-tags: [REACT-MDX, MERMAID, PLUGINS, SEARCH-SUPPORT, FEATURE-ADDITION]
+authors: [haxnation]
+tags: [REACT-MDX, MERMAID, PLUGINS, FEATURE-ADDITION]
 date: 2026-09-14
 ---
 
@@ -91,11 +91,3 @@ Images now support click-to-zoom, while captions remain readable across light an
     <strong>Fig 1.1:</strong> Haxnation. Forging Elite Cyber Talent.
   </figcaption>
 </figure>
-
-## 6. Global Search Across the Blog
-
-The navigation search control now opens a compact filter matrix instead of covering the page. The matrix supports search, author filtering, tag filtering, and sorting.
-
-Because the site is deployed statically on GitHub Pages, the build now generates a lightweight `blog-index.json` file containing searchable metadata for every post. The browser fetches this index when the matrix is used, so searches can find older posts that are not present in the first ten home-page cards. The normal Docusaurus pagination remains unchanged: the home page still shows ten posts and keeps the **Older entries** link.
-
-The search index includes titles, descriptions, tags, authors, dates, reading time, and post URLs. This keeps the global search fast while preserving the existing post-card layout and pagination.
