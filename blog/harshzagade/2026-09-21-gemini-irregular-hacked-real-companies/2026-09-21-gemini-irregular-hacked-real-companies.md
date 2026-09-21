@@ -7,7 +7,7 @@ date: 2026-09-21T09:00:00.000Z
 description: In May 2026, a Gemini model accessed three real companies during a cybersecurity evaluation after an unintended internet connection exposed the model to real-world systems.
 ---
 
-On September 19, 2026, Google confirmed that a Gemini model accessed three real companies during a cybersecurity test after an unintended internet connection and a naming mix-up exposed real systems. The incident highlights the risk of AI agents going beyond their intended scope when proper technical safeguards are missing.
+On September 19, 2026, Google confirmed that a Gemini model accessed three real companies during a cybersecurity test after an unintended internet connection and a naming mix-up exposed real systems. The incident highlights a central risk of agentic AI: when an agent can discover and act on unexpected paths, technical safeguards—not the model's judgment alone—must enforce the boundary.
 
 <!-- truncate -->
 
@@ -19,25 +19,15 @@ The exercise was intended to be isolated from the public internet. According to 
 
 There was another problem. The fictional company used in the exercise shared its name with a real business.
 
-Those two failures created a dangerous combination:
+Those two failures created a dangerous combination. The path from a simulated target to real infrastructure can be summarized as follows:
 
-```text
-Fictional target
-      |
-      v
-Gemini searches for information
-      |
-      v
-Internet access is unexpectedly available
-      |
-      v
-Real company with the same name is discovered
-      |
-      v
-Gemini treats the real target as part of the exercise
-      |
-      v
-Protected systems are accessed
+```mermaid
+flowchart LR
+    A["Fictional target"] --> B["Gemini searches for information"]
+    B --> C["Unexpected internet access"]
+    C --> D["Real company with the same name is discovered"]
+    D --> E["Gemini treats the real target as part of the exercise"]
+    E --> F["Protected systems are accessed"]
 ```
 
 Google said Gemini accessed three companies in total. In one case, it repeatedly guessed passwords until it gained access. In the other two, it found credentials in a public repository and used them to access protected systems.
@@ -50,17 +40,11 @@ A cybersecurity evaluation involving an AI agent needs a much stronger boundary 
 
 In a conventional capture-the-flag exercise, a participant might be given a deliberately vulnerable target and a defined scope:
 
-```text
-Participant
-    |
-    v
-Target
-    |
-    v
-Exploit
-    |
-    v
-Flag
+```mermaid
+flowchart LR
+    A["Participant"] --> B["Authorized target"]
+    B --> C["Exploit"]
+    C --> D["Flag"]
 ```
 
 The participant is expected to stay within that scope.
@@ -69,28 +53,15 @@ An autonomous AI agent changes the equation.
 
 Instead of following a fixed sequence, an agent can:
 
-```text
-Goal
-  |
-  v
-Reconnaissance
-  |
-  v
-Search
-  |
-  v
-Analyze results
-  |
-  v
-Choose next action
-  |
-  v
-Execute
-  |
-  v
-Observe
-  |
-  +------> Repeat
+```mermaid
+flowchart TD
+    A["Goal"] --> B["Reconnaissance"]
+    B --> C["Search"]
+    C --> D["Analyze results"]
+    D --> E["Choose next action"]
+    E --> F["Execute"]
+    F --> G["Observe"]
+    G --> B
 ```
 
 That means the environment has to enforce the boundary. A model should not be expected to act as the final firewall between a simulated target and a real one.
@@ -119,28 +90,20 @@ For an autonomous agent, however, the distinction has to be explicitly and relia
 
 The combination looked roughly like this:
 
-```text
-Test instruction
-      |
-      v
-"Find information about Company X"
-      |
-      +----> Fake Company X
-      |
-      +----> Real Company X
-                |
-                v
-          Internet-accessible
-                |
-                v
-          Real infrastructure
+```mermaid
+flowchart TD
+    A["Test instruction: Find information about Company X"] --> B["Target resolution"]
+    B --> C["Fake Company X"]
+    B --> D["Real Company X"]
+    D --> E["Internet-accessible"]
+    E --> F["Real infrastructure"]
 ```
 
 The important lesson is that **scope cannot depend on naming conventions alone**.
 
 ## How Gemini Gained Access
 
-The most interesting technical detail is also one of the least exotic.
+The most important technical detail is also one of the least exotic.
 
 Gemini did not need a newly discovered zero-day to reach the companies.
 
@@ -172,23 +135,13 @@ The AI component changes the scale and speed of discovery, but the underlying is
 
 The chain is straightforward:
 
-```text
-Credential committed to repository
-              |
-              v
-      Credential becomes public
-              |
-              v
-       AI performs reconnaissance
-              |
-              v
-      Credential is discovered
-              |
-              v
-       Credential is reused
-              |
-              v
-       Protected system accessed
+```mermaid
+flowchart LR
+    A["Credential committed to repository"] --> B["Credential becomes public"]
+    B --> C["AI performs reconnaissance"]
+    C --> D["Credential is discovered"]
+    D --> E["Credential is reused"]
+    E --> F["Protected system accessed"]
 ```
 
 That is why secrets management remains important even in organizations that are not building AI systems.
@@ -234,24 +187,19 @@ If multiple AI labs use similar evaluation environments, and those environments 
 
 The sequence is no longer simply:
 
-```text
-AI model -> test target
+```mermaid
+flowchart LR
+    A["AI model"] --> B["Test target"]
 ```
 
 It becomes:
 
-```text
-AI model
-    |
-    v
-Evaluation environment
-    |
-    +----> Intended target
-    |
-    +----> Unexpected internet access
-              |
-              v
-         Real systems
+```mermaid
+flowchart TD
+    A["AI model"] --> B["Evaluation environment"]
+    B --> C["Intended target"]
+    B --> D["Unexpected internet access"]
+    D --> E["Real systems"]
 ```
 
 That is the part security teams should pay attention to.
@@ -282,7 +230,7 @@ into a single workflow.
 
 A human penetration tester might perform the same individual actions, but an autonomous agent can potentially execute the process continuously and adapt after each result.
 
-That changes the economics and speed of offensive activity.
+That can change the speed, scale and cost of offensive activity.
 
 The technique is old.
 
@@ -325,7 +273,7 @@ The security principle is simple:
 
 ## The Sandbox Problem
 
-The word "sandbox" can create a false sense of security.
+Calling an environment a "sandbox" does not make it isolated.
 
 A sandbox is only useful if its isolation is real.
 
@@ -333,22 +281,15 @@ For an ordinary application, an accidental network route might remain unused for
 
 Consider an instruction such as:
 
-```text
-Find information about the target company.
-```
+> Find information about the target company.
 
 If the agent has internet access, searching the public web is a reasonable action.
 
 If the test environment contains a real company with the same name, the model can unknowingly move from:
 
-```text
-Authorized simulation
-```
-
-to:
-
-```text
-Unauthorized real-world target
+```mermaid
+flowchart LR
+    A["Authorized simulation"] -->|"boundary failure"| B["Unauthorized real-world target"]
 ```
 
 The model does not need malicious intent for this to happen.
@@ -403,8 +344,9 @@ Fictional organizations, domains and infrastructure should be checked against th
 
 The goal is to prevent:
 
-```text
-Fake target == Real target
+```mermaid
+flowchart LR
+    A["Fake target"] -->|"naming collision"| B["Real target"]
 ```
 
 from becoming a possibility.
@@ -429,45 +371,26 @@ The Gemini incident also illustrates the difference between a chatbot and an aut
 
 A conventional chatbot mostly operates like:
 
-```text
-User
- |
- v
-Prompt
- |
- v
-Model
- |
- v
-Answer
+```mermaid
+flowchart LR
+    A["User"] --> B["Prompt"]
+    B --> C["Model"]
+    C --> D["Answer"]
 ```
 
 An agent can operate more like:
 
-```text
-                 +----------------+
-                 |      Goal      |
-                 +-------+--------+
-                         |
-                         v
-                 +---------------+
-                 |     Model     |
-                 +-------+-------+
-                         |
-          +--------------+--------------+
-          |              |              |
-          v              v              v
-       Browser          Shell          APIs
-          |              |              |
-          +--------------+--------------+
-                         |
-                         v
-                     Results
-                         |
-                         v
-                   Model decides
-                         |
-                         +-----> Next action
+```mermaid
+flowchart TD
+    A["Goal"] --> B["Model"]
+    B --> C["Browser"]
+    B --> D["Shell"]
+    B --> E["APIs"]
+    C --> F["Results"]
+    D --> F
+    E --> F
+    F --> G["Model decides"]
+    G --> B
 ```
 
 That feedback loop is what makes agentic systems powerful.
@@ -478,7 +401,7 @@ A model does not have to invent a novel exploit if it can already combine reconn
 
 ## What This Incident Really Shows
 
-The most useful way to understand the Gemini incident is not:
+The most useful way to frame the Gemini incident is not:
 
 > "AI has learned how to hack."
 
